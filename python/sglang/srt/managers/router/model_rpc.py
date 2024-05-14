@@ -241,6 +241,8 @@ class ModelRpcServer(rpyc.Service):
                         f"available_size={available_size}, max_total_num_token={self.max_total_num_token}\n"
                         "KV cache pool leak detected!"
                     )
+                    import os
+                    os._exit(0)
 
     def handle_generate_request(
         self,
