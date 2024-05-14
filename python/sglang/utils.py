@@ -8,7 +8,7 @@ from io import BytesIO
 from json import dumps
 
 import requests
-
+from urllib.error import URLError
 from tenacity import RetryCallState, retry, wait_fixed
 import socket
 from urllib.parse import urlparse
@@ -119,7 +119,8 @@ def _should_retry(retry_state: RetryCallState):
 
         is_timeout = (isinstance(exception, requests.exceptions.Timeout) or
                       isinstance(exception, ConnectionResetError) or
-                      isinstance(exception, TimeoutError)
+                      isinstance(exception, TimeoutError) or
+                      (isinstance(exception, URLError) and 'timed out' in str(exception.reason))
                      )
         if is_timeout and is_server_online:
             print("SGLang http request connection timed out. Retrying...")
