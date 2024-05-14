@@ -10,7 +10,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from json import dumps
-
+from urllib.error import URLError
 import numpy as np
 import requests
 
@@ -102,7 +102,8 @@ def _should_retry(retry_state: RetryCallState):
 
         is_timeout = (isinstance(exception, requests.exceptions.Timeout) or
                       isinstance(exception, ConnectionResetError) or
-                      isinstance(exception, TimeoutError)
+                      isinstance(exception, TimeoutError) or
+                      (isinstance(exception, URLError) and 'timed out' in str(exception.reason))
                      )
         if is_timeout and is_server_online:
             print("SGLang http request connection timed out. Retrying...")
