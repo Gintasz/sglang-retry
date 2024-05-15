@@ -127,6 +127,7 @@ def _should_retry(retry_state: RetryCallState):
             return True
         if not is_timeout:
             print("SGLang http request failed for unknown reason: {}".format(exception))
+            return True
     return False
 
 @retry(
